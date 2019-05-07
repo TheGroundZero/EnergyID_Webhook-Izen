@@ -16,8 +16,6 @@ from datetime import datetime
 import requests
 from requests import HTTPError
 
-logging.basicConfig(level=logging.DEBUG)
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -31,8 +29,13 @@ def main():
                         help='EnergieID MeterID')
     parser.add_argument('-g', '--guid', dest='guid', required=True,
                         help='Izen GUID')
+    parser.add_argument('-d', '--debug', dest='debug', required=False,
+                        action='store_true', help='Enable debugging')
 
     args = parser.parse_args()
+
+    if args.debug:
+        logging.basicConfig(level=logging.DEBUG)
 
     monitor_izen(args.guid, args.url, args.meterid)
 
