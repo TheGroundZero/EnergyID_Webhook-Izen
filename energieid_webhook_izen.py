@@ -9,9 +9,14 @@ __author__ = 'TheGroundZero (https://github.com/TheGroundZero)'
 __package__ = str("EnergieID Webhook - Izen")
 
 import argparse
+import json
+import logging
 from datetime import datetime
 
 import requests
+from requests import HTTPError
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 def main():
@@ -40,22 +45,34 @@ def monitor_izen(guid, url, meterid):
 
 def get_total(guid):
     url = "https://izen-monitoring.be/api/customer/customer/productionTotal/{}".format(guid)
-
     request_headers = {
         "Accept": "application/json,application/vnd.iman.v1+json,text/plain, */*",
         "Referer": "https://izen-monitoring.be",
         "Content-Type": "application/json",
     }
-
-    request = requests.get(url, headers=request_headers)
-
-    json = request.json()
     total = 0
 
-    for item in json:
-        total += item['value']
+    try:
+        req = requests.Request("GET", url, headers=request_headers)
+        prep = req.prepare()
+        logging.debug(pretty_print_request(prep))
 
-    print(total)
+        s = requests.Session()
+        resp = s.send(prep)
+        logging.debug(pretty_print_response(resp))
+
+        resp.raise_for_status()
+
+        jsondata = resp.json()
+
+        for item in jsondata:
+            total += item['value']
+
+        logging.info("Total production: {} kWh".format(total))
+    except HTTPError as err:
+        logging.exception(f"HTTP error occurred: {err}")
+    except Exception as err:
+        logging.exception(f"Other error occurred: {err}")
 
     return total
 
@@ -66,15 +83,55 @@ def create_json_object(meterid, value):
 
     result = {
         "meterId": meterid,
-        "data": data
+        "data": [
+            data
+        ]
     }
 
-    print(result)
+    logging.debug(result)
+
     return result
 
 
 def post_to_webhook(url, data):
-    requests.post(url, json=data)
+    request_headers = {
+        "Content-Type": "application/json",
+    }
+
+    try:
+        req = requests.Request("POST", url, headers=request_headers, data=json.dumps(data))
+        prep = req.prepare()
+        logging.debug(pretty_print_request(prep))
+
+        s = requests.Session()
+        resp = s.send(prep)
+        logging.debug(pretty_print_response(resp))
+
+        resp.raise_for_status()
+    except HTTPError as err:
+        logging.exception(f"HTTP error occurred: {err}")
+    except Exception as err:
+        logging.exception(f"Other error occurred: {err}")
+    else:
+        logging.info("{} - {}".format(resp.status_code, resp.reason))
+
+
+def pretty_print_request(prep):
+    return "{}\n{} {}\n{}\n\n{}".format(
+        "----------- REQUEST -----------",
+        prep.method, prep.url,
+        "\n".join("{}: {}".format(k, v) for k, v in prep.headers.items()),
+        prep.body
+    )
+
+
+def pretty_print_response(resp):
+    return "{}\n{} {}\n{}\n\n{}".format(
+        "----------- RESPONSE -----------",
+        resp.status_code, resp.url,
+        "\n".join("{}: {}".format(k, v) for k, v in resp.headers.items()),
+        resp.content
+    )
 
 
 if __name__ == '__main__':
