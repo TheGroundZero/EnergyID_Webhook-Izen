@@ -70,9 +70,9 @@ def get_total(guid):
 
         logging.info("Total production: {} kWh".format(total))
     except HTTPError as err:
-        logging.exception(f"HTTP error occurred: {err}")
+        logging.exception("HTTP error occurred: {}".format(err))
     except Exception as err:
-        logging.exception(f"Other error occurred: {err}")
+        logging.exception("Other error occurred: {}".format(err))
 
     return total
 
@@ -109,9 +109,9 @@ def post_to_webhook(url, data):
 
         resp.raise_for_status()
     except HTTPError as err:
-        logging.exception(f"HTTP error occurred: {err}")
+        logging.exception("HTTP error occurred: {}".format(err))
     except Exception as err:
-        logging.exception(f"Other error occurred: {err}")
+        logging.exception("Other error occurred: {}".format(err))
     else:
         logging.info("{} - {}".format(resp.status_code, resp.reason))
 
