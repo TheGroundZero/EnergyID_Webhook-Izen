@@ -4,7 +4,7 @@ Geautomatiseerd de opbrengst van uw zonnepanelen (geïnstalleerd door Izen) uplo
 
 Deze tool maakt gebruik van de *Incoming Webhook*-integratie van EnergieID.
 
-## Gebruik
+## Opzet
 
 1. Op het EnergieID-platform - [https://www.energieid.be][EnergieID]
     1. Activeer de [*Incoming Webhook*-integratie][integraties]
@@ -17,8 +17,9 @@ Deze tool maakt gebruik van de *Incoming Webhook*-integratie van EnergieID.
     1. Login op het platform
     2. Kopieer de guid uit de adresbalk (alles na `?guid=`)  
        Deze dien je te gebruiken met de parameter `-g`
-  
 
+
+## Gebruik
 
     $ ./energieid_webhook_izen.py -h
     
