@@ -113,10 +113,20 @@ def post_to_webhook(url, data):
         resp.raise_for_status()
     except HTTPError as err:
         logging.exception("HTTP error occurred: {}".format(err))
+        logging.exception(error_codes(resp.status_code))
     except Exception as err:
         logging.exception("Other error occurred: {}".format(err))
     else:
         logging.info("{} - {}".format(resp.status_code, resp.reason))
+
+
+def error_codes(status):
+    error = {
+        400: "400 Bad Request - The payload sent in your request cannot be understood.",
+        403: "403 Forbidden - The webhook associated with your request has been disabled.",
+        404: "404 Not found - The webhook URL does not exsist or is no longer available."
+    }
+    return error.get(status, "Unknown error code ({})".format(status))
 
 
 def pretty_print_request(prep):
