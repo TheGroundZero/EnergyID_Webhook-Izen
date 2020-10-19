@@ -21,19 +21,34 @@ Deze tool maakt gebruik van de *Incoming Webhook*-integratie van EnergieID.
 
 ## Gebruik
 
-    $ ./energieid_webhook_izen.py -h
+```bash
+$ ./energieid_webhook_izen.py -h
     
-    usage: energieid_webhook_izen.py [-h] -u URL -m METERID -g GUID
-    
-    Automatically post IZEN solar info via WebHook
-    
-    optional arguments:
-      -h, --help            show this help message and exit
-      -u URL, --url URL     EnergieID Webhook url
-      -m METERID, --meter METERID
-                            EnergieID MeterID
-      -g GUID, --guid GUID  Izen GUID
+usage: energieid_webhook_izen.py [-h] [-c CONFIG] [-u URL] [-m METERID]
+                                 [-g GUID] [-d]
 
+Automatically post IZEN solar info via WebHook
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c CONFIG, --config CONFIG
+                        config.json file containing url, meter and guid
+  -u URL, --url URL     EnergieID Webhook url
+  -m METERID, --meter METERID
+                        EnergieID MeterID
+  -g GUID, --guid GUID  Izen GUID
+  -d, --debug           Enable debugging
+```
+
+## Config bestand
+
+```json
+{
+    "url":"https://hooks.energyid.eu/services/WebhookIn/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/xxxxxxxxxxxx",
+    "meter":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+    "guid":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+}
+```
 
 [EnergieID]: https://www.energieid.be
 [integraties]: https://www.energieid.be/integrations
