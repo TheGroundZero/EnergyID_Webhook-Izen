@@ -21,13 +21,15 @@ def main():
     parser = argparse.ArgumentParser(
         prog='energieid_webhook_izen.py',
         description='Automatically post IZEN solar info via WebHook',
-        allow_abbrev=False
+        allow_abbrev=True
     )
-    parser.add_argument('-u', '--url', dest='url', required=True,
+    parser.add_argument('-c', '--config', dest='config', required=False,
+                        help='config.json file containing url, meter and guid')
+    parser.add_argument('-u', '--url', dest='url', required=False,
                         help='EnergieID Webhook url')
-    parser.add_argument('-m', '--meter', dest='meterid', required=True,
+    parser.add_argument('-m', '--meter', dest='meterid', required=False,
                         help='EnergieID MeterID')
-    parser.add_argument('-g', '--guid', dest='guid', required=True,
+    parser.add_argument('-g', '--guid', dest='guid', required=False,
                         help='Izen GUID')
     parser.add_argument('-d', '--debug', dest='debug', required=False,
                         action='store_true', help='Enable debugging')
@@ -37,7 +39,23 @@ def main():
     if args.debug:
         logging.basicConfig(level=logging.DEBUG)
 
-    monitor_izen(args.guid, args.url, args.meterid)
+    if args.config:
+        logging.debug("Reading config")
+        config = read_config(args.config)
+        monitor_izen(*config)
+    else:
+        logging.debug("Reading params")
+        monitor_izen(args.guid, args.url, args.meterid)
+
+
+def read_config(filename):
+    logging.debug("Opening {}".format(filename))
+    with open(filename, 'r') as config:
+        data=config.read()
+
+    obj = json.loads(data)
+    logging.debug(obj)
+    return (obj['guid'],obj['url'],obj['meter'])
 
 
 def monitor_izen(guid, url, meterid):
