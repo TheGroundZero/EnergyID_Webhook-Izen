@@ -37,7 +37,7 @@ def main():
     args = parser.parse_args()
 
     if args.debug:
-        logging.basicConfig(level=logging.DEBUG)
+        logging.basicConfig(level=logging.WARNING)
 
     if args.config:
         logging.debug("Reading config")
@@ -91,6 +91,7 @@ def get_total(guid):
 
         logging.info("Total production: {} kWh".format(total))
     except HTTPError as err:
+        logging.exception(error_codes(resp.status_code))
         logging.exception("HTTP error occurred: {}".format(err))
     except Exception as err:
         logging.exception("Other error occurred: {}".format(err))
@@ -117,6 +118,7 @@ def create_json_object(meterid, value):
 def post_to_webhook(url, data):
     request_headers = {
         "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0"
     }
 
     try:
@@ -130,8 +132,8 @@ def post_to_webhook(url, data):
 
         resp.raise_for_status()
     except HTTPError as err:
-        logging.exception("HTTP error occurred: {}".format(err))
         logging.exception(error_codes(resp.status_code))
+        logging.exception("HTTP error occurred: {}".format(err))
     except Exception as err:
         logging.exception("Other error occurred: {}".format(err))
     else:
@@ -142,7 +144,8 @@ def error_codes(status):
     error = {
         400: "400 Bad Request - The payload sent in your request cannot be understood.",
         403: "403 Forbidden - The webhook associated with your request has been disabled.",
-        404: "404 Not found - The webhook URL does not exsist or is no longer available."
+        404: "404 Not found - The webhook URL does not exsist or is no longer available.",
+        429: "429 Too Many Requests - Rate-limit hit. Maximum rate is 20 requests per 15 minutes."
     }
     return error.get(status, "Unknown error code ({})".format(status))
 
