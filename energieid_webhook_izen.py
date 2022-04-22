@@ -3,7 +3,7 @@
 #
 #
 # Project name: EnergieID Webhook - Izen: Automatically post IZEN solar info via WebHook
-# Project URL: https://github.com/TheGroundZero/xxxxxxxxxxxxx
+# Project URL: https://github.com/TheGroundZero/EnergyID_Webhook-Izen
 
 __author__ = 'TheGroundZero (https://github.com/TheGroundZero)'
 __package__ = str("EnergieID Webhook - Izen")
