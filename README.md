@@ -4,6 +4,14 @@ Geautomatiseerd de opbrengst van uw zonnepanelen (geïnstalleerd door Izen) uplo
 
 Deze tool maakt gebruik van de *Incoming Webhook*-integratie van EnergieID.
 
+## BELANGRIJK
+
+**Izen maakt sinds 2022 gebruik van een [nieuw platform][PVmonitor] waardoor dit script niet langer werkt.**
+**Dit script kan dus niet langer gebruikt worden om data uit het platform te halen en op te laden in EnergieID, HomeAssistant, ...**
+
+Gelukkig kan je de data [rechtstreeks uitlezen uit de Solis omvormer][blogpost].
+Zo kan je deze alsnog via de EnergieID webhook opladen :)
+
 ## Opzet
 
 1. Op het EnergieID-platform - [https://www.energieid.be][EnergieID]
@@ -50,6 +58,8 @@ optional arguments:
 }
 ```
 
+[PVmonitor]: https://izen-pvmonitoring.be/ "PV Dashboard"
+[blogpost]: https://sequr.be/blog/2021/08/reading-ginlong-solis-inverter-over-serial-and-importing-in-home-assistant-over-mqtt/ "Reading Ginlong Solis inverter over serial and importing in Home Assistant over MQTT"
 [EnergieID]: https://www.energieid.be
 [integraties]: https://www.energieid.be/integrations
 [IzenMonitoring]: https://izen-monitoring.be
